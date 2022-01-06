@@ -49,7 +49,7 @@ def run_seq_finetuning(args):
             results = {}
 
         first_task = seq[0]
-
+        output_dir = os.path.join(output_base, first_task)
         pre_training_dataset_manager, _ = get_dataset_config(first_task)
         setup = Setup(id=args["id"])
         setup.dataset(dataset_manager)
