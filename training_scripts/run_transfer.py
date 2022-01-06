@@ -48,6 +48,18 @@ def run_seq_finetuning(args):
         else:
             results = {}
 
+        first_task = seq[0]
+
+        pre_training_dataset_manager, _ = get_dataset_config(first_task)
+        setup = Setup(id=args["id"])
+        setup.dataset(dataset_manager)
+        config["training"]["output_dir"] = output_dir
+        setup.training(RunArguments(**config["training"]))
+        if isinstance(config["evaluation"], str):
+            setup.evaluation(split=config["evaluation"])
+        else:
+            setup.evaluation()
+
         # setup model
         if args["model_name_or_path"]:
             config["model"]["model_name_or_path"] = args["model_name_or_path"]
@@ -55,11 +67,11 @@ def run_seq_finetuning(args):
             if not config["model"].get("tokenizer_name", None):
                 # HACK in case the tokenizer is not saved with the model
                 config["model"]["tokenizer_name"] = config["model"]["model_name_or_path"]
-            config["model"]["model_name_or_path"] = restore_path(task_map, seq[0], pre_training_dataset_manager)
+            config["model"]["model_name_or_path"] = restore_path(task_map, first_task, pre_training_dataset_manager)
             config["model"]["drop_model_head"] = True
         else:
             config["model"]["load_adapters"] = {
-                dataset_manager.name: restore_path(task_map, task_from, pre_training_dataset_manager)
+                dataset_manager.name: restore_path(task_map, first_task, pre_training_dataset_manager)
             }
         setup.model(ModelArguments(**config["model"]))
 
@@ -80,16 +92,6 @@ def run_seq_finetuning(args):
                 print(f"Skipping task {task_from} as it already reached {args['max_restarts']} runs.")
                 continue
 
-            pre_training_dataset_manager, _ = get_dataset_config(task_from)
-            setup = Setup(id=args["id"])
-            setup.dataset(dataset_manager)
-            config["training"]["output_dir"] = output_dir
-            setup.training(RunArguments(**config["training"]))
-            if isinstance(config["evaluation"], str):
-                setup.evaluation(split=config["evaluation"])
-            else:
-                setup.evaluation()
-            
             # start!
             if task_from in results and args["overwrite_mode"] == 1:
                 # append to existing
