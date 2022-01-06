@@ -111,7 +111,7 @@ def run_seq_finetuning(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("target_task", type=str, help="Name of the target task training setup.")
+    # parser.add_argument("target_task", type=str, help="Name of the  task training setup.")
     parser.add_argument("--id", type=int, default=0, help="ID of this run.")
     parser.add_argument("--task_map", type=str, default=DEFAULT_TASK_MAP)
     parser.add_argument(
