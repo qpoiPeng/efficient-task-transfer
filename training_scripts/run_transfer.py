@@ -52,11 +52,7 @@ def run_seq_finetuning(args):
         setup = Setup(id=args["id"])
         config["training"]["output_dir"] = output_dir
         setup.training(RunArguments(**config["training"]))
-        if isinstance(config["evaluation"], str):
-            setup.evaluation(split=config["evaluation"])
-        else:
-            setup.evaluation()
-
+        
         # setup model
         if args["model_name_or_path"]:
             config["model"]["model_name_or_path"] = args["model_name_or_path"]
@@ -74,7 +70,6 @@ def run_seq_finetuning(args):
 
         for task_from, task_to in zip(seq[0:], seq[1:]):
             print(f"*** Running transfer from {task_from} to {task_to} ***")
-            dataset_manager, config = get_dataset_config(task_to, train_size=args["train_size"])
             output_dir = os.path.join(output_base, task_from)
             # skip this iteration if no overwrites requested & existing
             if args["overwrite_mode"] == 0 and os.path.exists(output_dir):
@@ -90,7 +85,11 @@ def run_seq_finetuning(args):
                 print(f"Skipping task {task_from} as it already reached {args['max_restarts']} runs.")
                 continue
             
-            dataset_manager, _ = get_dataset_config(task_to)
+            dataset_manager, config = get_dataset_config(task_to)
+            if isinstance(config["evaluation"], str):
+                setup.evaluation(split=config["evaluation"], train_size=args["train_size"])
+            else:
+                setup.evaluation()
             setup.dataset(dataset_manager)
 
             # start!
