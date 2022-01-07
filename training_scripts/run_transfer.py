@@ -50,7 +50,6 @@ def run_seq_finetuning(args):
         output_dir = os.path.join(output_base, first_task)
         pre_training_dataset_manager, _ = get_dataset_config(first_task)
         setup = Setup(id=args["id"])
-        setup.dataset(dataset_manager)
         config["training"]["output_dir"] = output_dir
         setup.training(RunArguments(**config["training"]))
         if isinstance(config["evaluation"], str):
