@@ -55,13 +55,15 @@ class Setup:
         """
         Set up the dataset.
         """
-        if self.dataset_manager is not None:
-            raise ValueError("Dataset already set.")
+        # if self.dataset_manager is not None:
+        #     raise ValueError("Dataset already set.")
         if isinstance(args_or_manager, DatasetManager):
             self.dataset_manager = args_or_manager
         else:
             self.dataset_manager = DATASET_MANAGER_CLASSES[args_or_manager.dataset_name](args_or_manager)
 
+    # def resetDataset(self):
+    #     self.dataset_manager
     def model(self, args: ModelArguments):
         """
         Set up the model.
@@ -154,7 +156,7 @@ class Setup:
             prepared_args.logging_dir = os.path.join(args.logging_dir, str(restart))
         return prepared_args
 
-    def run(self, restarts=None, first_run_index=0):
+    def run(self, restarts=None, first_run_index=0, reload=1):
         """
         Run this setup. Dataset, model, and training or evaluation are expected to be set.
 
@@ -207,11 +209,12 @@ class Setup:
 
             # Set up model
             is_full_finetuning = not self.model_args.train_adapter and self.model_args.train_adapter_fusion is None
-            self.model_instance = create_model(
-                self.model_args,
-                self.dataset_manager,
-                use_classic_model_class=is_full_finetuning,
-            )
+            if reload:
+                self.model_instance = create_model(
+                    self.model_args,
+                    self.dataset_manager,
+                    use_classic_model_class=is_full_finetuning,
+                )
 
             # Configure and run training
             if self._train_run_args:
