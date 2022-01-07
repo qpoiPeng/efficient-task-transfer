@@ -312,8 +312,8 @@ class Setup:
                 if not has_restarts:
                     for notifier in self._notifiers.values():
                         notifier.notify_end(message="Evaluation results:", **results)
-            # Delete model
-            del self.model_instance
+            # Nooooo Delete model
+            # del self.model_instance
 
         # post-process aggregated results
         if has_restarts and self._do_eval:
