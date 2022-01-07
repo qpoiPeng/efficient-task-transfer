@@ -54,7 +54,7 @@ def run_seq_finetuning(args):
             }
         setup.model(ModelArguments(**config["model"]))
 
-        for i, task_from, task_to in enumerate(zip(seq[0:], seq[1:])):
+        for i, (task_from, task_to) in enumerate(zip(seq[0:], seq[1:])):
             print(f"*** Running transfer from {task_from} to {task_to} ***")
             output_dir = os.path.join(output_base, task_from)
             # skip this iteration if no overwrites requested & existing
