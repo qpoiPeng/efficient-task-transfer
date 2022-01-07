@@ -26,18 +26,6 @@ def run_seq_finetuning(args):
         sequence_name = '-'.join(seq)
         output_base = os.path.join(TRANSFER_OUTPUT_DIR, sequence_name)
 
-        # patch model/ training args
-        if args["full_model"]:
-            config["model"]["train_adapter"] = False
-            config["training"]["patience"] = 0
-            default_lr = 3e-5
-            default_epochs = 3
-        else:
-            default_lr = 1e-4
-            default_epochs = 15
-        config["training"]["learning_rate"] = args["learning_rate"] or default_lr
-        config["training"]["num_train_epochs"] = args["num_train_epochs"] or default_epochs
-
         # load results if existing
         final_results_file = os.path.join(output_base, "eval_results.json")
         if os.path.exists(final_results_file):
@@ -50,9 +38,7 @@ def run_seq_finetuning(args):
         output_dir = os.path.join(output_base, first_task)
         pre_training_dataset_manager, _ = get_dataset_config(first_task)
         setup = Setup(id=args["id"])
-        config["training"]["output_dir"] = output_dir
-        setup.training(RunArguments(**config["training"]))
-        
+
         # setup model
         if args["model_name_or_path"]:
             config["model"]["model_name_or_path"] = args["model_name_or_path"]
@@ -86,6 +72,22 @@ def run_seq_finetuning(args):
                 continue
             
             dataset_manager, config = get_dataset_config(task_to)
+
+            # patch model/ training args
+            if args["full_model"]:
+                config["model"]["train_adapter"] = False
+                config["training"]["patience"] = 0
+                default_lr = 3e-5
+                default_epochs = 3
+            else:
+                default_lr = 1e-4
+                default_epochs = 15
+            config["training"]["learning_rate"] = args["learning_rate"] or default_lr
+            config["training"]["num_train_epochs"] = args["num_train_epochs"] or default_epochs
+
+            config["training"]["output_dir"] = output_dir
+            setup.training(RunArguments(**config["training"]))
+
             if isinstance(config["evaluation"], str):
                 setup.evaluation(split=config["evaluation"], train_size=args["train_size"])
             else:
