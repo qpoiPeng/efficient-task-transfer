@@ -54,7 +54,7 @@ def run_seq_finetuning(args):
             }
         setup.model(ModelArguments(**config["model"]))
 
-        for task_from, task_to in zip(seq[0:], seq[1:]):
+        for i, task_from, task_to in enumerate(zip(seq[0:], seq[1:])):
             print(f"*** Running transfer from {task_from} to {task_to} ***")
             output_dir = os.path.join(output_base, task_from)
             # skip this iteration if no overwrites requested & existing
@@ -95,13 +95,14 @@ def run_seq_finetuning(args):
             setup.dataset(dataset_manager)
 
             # start!
+            reload = 1 if i == 0 else 0
             if task_from in results and args["overwrite_mode"] == 1:
                 # append to existing
-                run_results = setup.run(restarts=args["restarts"], first_run_index=len(results[task_from]["seeds"]))
+                run_results = setup.run(restarts=args["restarts"], first_run_index=len(results[task_from]["seeds"]), reload=reload)
                 for k, v in run_results.items():
                     results[task_from][k] += v
             else:
-                run_results = setup.run(restarts=args["restarts"])
+                run_results = setup.run(restarts=args["restarts"], reload=reload)
                 results[task_from] = run_results
 
             # save results after every iteration
