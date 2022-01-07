@@ -22,11 +22,9 @@ def run_seq_finetuning(args):
 
     for seq in sequence:
         target_task = seq[-1]
-        dataset_manager, config = get_dataset_config(target_task, train_size=args["train_size"])
-        sequence_name = ""
-        for task in seq:
-            sequence_name += task + '-'
-        output_base = os.path.join(TRANSFER_OUTPUT_DIR, sequence_name[:-1])
+        target_dataset_manager, config = get_dataset_config(target_task, train_size=args["train_size"])
+        sequence_name = '-'.join(seq)
+        output_base = os.path.join(TRANSFER_OUTPUT_DIR, sequence_name)
 
         # patch model/ training args
         if args["full_model"]:
@@ -71,12 +69,13 @@ def run_seq_finetuning(args):
             config["model"]["drop_model_head"] = True
         else:
             config["model"]["load_adapters"] = {
-                dataset_manager.name: restore_path(task_map, first_task, pre_training_dataset_manager)
+                target_dataset_manager.name: restore_path(task_map, first_task, pre_training_dataset_manager)
             }
         setup.model(ModelArguments(**config["model"]))
 
         for task_from, task_to in zip(seq[0:], seq[1:]):
             print(f"*** Running transfer from {task_from} to {task_to} ***")
+            dataset_manager, config = get_dataset_config(task_to, train_size=args["train_size"])
             output_dir = os.path.join(output_base, task_from)
             # skip this iteration if no overwrites requested & existing
             if args["overwrite_mode"] == 0 and os.path.exists(output_dir):
@@ -91,6 +90,9 @@ def run_seq_finetuning(args):
             ):
                 print(f"Skipping task {task_from} as it already reached {args['max_restarts']} runs.")
                 continue
+            
+            dataset_manager, _ = get_dataset_config(task_to)
+            setup.dataset(dataset_manager)
 
             # start!
             if task_from in results and args["overwrite_mode"] == 1:
@@ -105,8 +107,6 @@ def run_seq_finetuning(args):
             # save results after every iteration
             with open(final_results_file, "w") as f:
                 json.dump(results, f)
-
-        del setup
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

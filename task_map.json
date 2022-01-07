@@ -1,10 +1,9 @@
 {
-    "source_path_format": "~/itrain/run_output/roberta/{0}/{1}/checkpoint-best/{2}",
+    "source_path_format": "/content/efficient-task-transfer/run_output/roberta/{0}/{1}/checkpoint-best/{2}",
     "adapters": {
         "rte": "0",
         "stsb": "1",
         "mrpc": "2"
-        // add all pre-trained models here ...
     },
     "from": [
         "rte",
@@ -16,7 +15,7 @@
         "stsb",
         "mrpc"
     ],
-    "target_path_format": "~/itrain/limited_output/{0}/{1}/0/checkpoint-best/{2}",
+    "target_path_format": "/content/efficient-task-transfer/limited_output/{0}/{1}/0/checkpoint-best/{2}",
     "to": {
         "rte": "eval_accuracy",
         "stsb": "eval_spearmanr",
