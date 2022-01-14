@@ -1,0 +1,4 @@
+eval_loss = 0.3306250110560772
+eval_accuracy = 0.875
+eval_f1 = 0.9106830122591945
+training_epochs = 10.0

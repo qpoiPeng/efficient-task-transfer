@@ -1,0 +1,4 @@
+eval_loss = 0.43682941198349
+eval_pearson = 0.9018921089754764
+eval_spearmanr = 0.8997397215437037
+training_epochs = 10.0
