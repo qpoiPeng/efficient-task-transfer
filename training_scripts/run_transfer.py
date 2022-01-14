@@ -42,6 +42,8 @@ def run_seq_finetuning(args):
     with open(args["task_map"], "r") as f:
         task_map = json.load(f)
     for task_name in task_map["from"]:
+        if task_name == target_task_name:
+            continue
         print(f"*** Running transfer from {task_name} to {target_task_name} ***")
         output_dir = os.path.join(output_base, task_name)
         # skip this iteration if no overwrites requested & existing
