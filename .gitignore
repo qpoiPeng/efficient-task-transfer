@@ -3,7 +3,6 @@ env
 __pycache__
 *.egg-info
 fusion_output
-transfer_output
 limited_output
 run_logs
 samples
