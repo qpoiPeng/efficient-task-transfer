@@ -67,7 +67,7 @@ def run_seq_finetuning(args):
             setup.evaluation(split=config["evaluation"])
         else:
             setup.evaluation()
-        setup.notify(config["notify"])
+        # setup.notify(config["notify"])
         setup._config_name = "transfer_" + task_name + "_to_" + target_task_name
         # setup model
         if args["model_name_or_path"]:
