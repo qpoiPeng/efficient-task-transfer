@@ -1,0 +1,1 @@
+{"stsb": {"seeds": [42], "eval_loss": [0.322256812424052], "eval_accuracy": [0.8921568627450981], "eval_f1": [0.9228070175438596], "training_epochs": [10.0]}, "rte": {"seeds": [42], "eval_loss": [0.3306250110560772], "eval_accuracy": [0.875], "eval_f1": [0.9106830122591945], "training_epochs": [10.0]}}
