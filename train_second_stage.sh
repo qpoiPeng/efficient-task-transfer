@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export RUN_TRANSFER_OUTPUT_DIR="second_stage/"
+
 tasks=("stsb" "rte" "mrpc")
 for i in "${tasks[@]}"; do
   echo $i
@@ -7,6 +9,6 @@ for i in "${tasks[@]}"; do
         --id 1 \
         --learning_rate 1e-4 \
         --num_train_epochs 10 \
-        --length 2 \
+        --length 3 \
         $i
 done

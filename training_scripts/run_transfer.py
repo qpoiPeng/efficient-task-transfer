@@ -38,6 +38,8 @@ def run_seq_finetuning(args):
     else:
         results = {}
 
+    transfer_length = args['length']
+
     # iterate over adapters for fusion
     with open(args["task_map"], "r") as f:
         task_map = json.load(f)
@@ -78,11 +80,11 @@ def run_seq_finetuning(args):
             if not config["model"].get("tokenizer_name", None):
                 # HACK in case the tokenizer is not saved with the model
                 config["model"]["tokenizer_name"] = config["model"]["model_name_or_path"]
-            config["model"]["model_name_or_path"] = restore_path(task_map, task_name, pre_training_dataset_manager)
+            config["model"]["model_name_or_path"] = restore_path(task_map, task_name, target_task_name, pre_training_dataset_manager, transfer_length)
             config["model"]["drop_model_head"] = True
         else:
             config["model"]["load_adapters"] = {
-                dataset_manager.name: restore_path(task_map, task_name, pre_training_dataset_manager)
+                dataset_manager.name: restore_path(task_map, task_name, target_task_name, pre_training_dataset_manager, transfer_length)
             }
         setup.model(ModelArguments(**config["model"]))
         # start!
@@ -115,6 +117,7 @@ if __name__ == "__main__":
     parser.add_argument("--train_size", type=int, default=-1)
     parser.add_argument("--restarts", type=int, default=None)
     parser.add_argument("--max_restarts", type=int, default=None)
+    parser.add_argument("--length", type=int, default=2)
     parser.add_argument("--full_model", action="store_true")
     parser.add_argument("--model_name_or_path", default=None)
     args = vars(parser.parse_args())

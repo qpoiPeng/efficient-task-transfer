@@ -1,0 +1,22 @@
+{
+    "source_path_format": "./transfer_output/to_{0}/{1}/checkpoint-best/{2}",
+    "from": [
+        "stsb",
+        "rte",
+        "mrpc"
+    ],
+    "seq":[
+        "stsb-rte-mrpc",
+        "rte-stsb-mrpc",
+        "stsb-mrpc-rte",
+        "mrpc-stsb-rte",
+        "mrpc-rte-stsb",
+        "rte-mrpc-stsb"
+    ],
+    "target_path_format": "./limited_output/{0}/{1}/0/checkpoint-best/{2}",
+    "to": {
+        "rte": "eval_accuracy",
+        "stsb": "eval_spearmanr",
+        "mrpc": "eval_accuracy"
+    }
+}
