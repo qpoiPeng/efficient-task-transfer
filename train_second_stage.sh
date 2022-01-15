@@ -10,5 +10,6 @@ for i in "${tasks[@]}"; do
         --learning_rate 1e-4 \
         --num_train_epochs 10 \
         --length 3 \
+        --task_map task_map_second_stage.json \
         $i
 done
