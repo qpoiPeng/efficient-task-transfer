@@ -1,1 +1,0 @@
-{"rte": {"seeds": [42], "eval_loss": [0.45277322467168174], "eval_pearson": [0.9012723949972071], "eval_spearmanr": [0.8991027406776364], "training_epochs": [10.0]}, "mrpc": {"seeds": [42], "eval_loss": [0.4286598180135091], "eval_pearson": [0.9024355672664082], "eval_spearmanr": [0.9000260527019034], "training_epochs": [10.0]}}
