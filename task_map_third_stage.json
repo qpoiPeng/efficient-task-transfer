@@ -1,0 +1,13 @@
+{
+    "source_path_format": "./second_stage/to_{0}/{1}/checkpoint-best/{2}",
+    "from": [
+        "pmb_sem_tagging"
+    ],
+    "seq":[
+        "rte-stsb-pmb_sem_tagging-mrpc"
+    ],
+    "target_path_format": "./limited_output/{0}/{1}/0/checkpoint-best/{2}",
+    "to": {
+        "mrpc": "eval_accuracy"
+    }
+}
