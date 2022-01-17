@@ -1,0 +1,7 @@
+eval_loss = 0.3634232340730609
+eval_accuracy = 0.9002477957701839
+eval_precision = 0.9205539044781762
+eval_recall = 0.9002477957701839
+eval_f1 = 0.9000161630559202
+training_epochs = 10.0
+eval_split = gold
